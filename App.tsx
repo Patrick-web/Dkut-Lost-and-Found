@@ -1,21 +1,30 @@
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-
+import { NavigationContainer } from "@react-navigation/native"
 import useCachedResources from './hooks/useCachedResources';
-import useColorScheme from './hooks/useColorScheme';
-import Navigation from './navigation';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
+import SignUp from "./routes/Signup"
+import Login from "./routes/Login"
+import Main from "./routes/Main"
 
 export default function App() {
   const isLoadingComplete = useCachedResources();
-  const colorScheme = useColorScheme();
+
+  const Stack = createNativeStackNavigator()
 
   if (!isLoadingComplete) {
     return null;
   } else {
     return (
       <SafeAreaProvider>
-        <Navigation colorScheme={colorScheme} />
         <StatusBar />
+        <NavigationContainer>
+          <Stack.Navigator screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="Main" component={Main} />
+
+          </Stack.Navigator>
+        </NavigationContainer>
       </SafeAreaProvider>
     );
   }

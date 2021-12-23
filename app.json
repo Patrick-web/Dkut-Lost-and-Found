@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "reactnative",
-    "slug": "reactnative",
+    "name": "DFound",
+    "slug": "DFound",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -25,7 +25,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.react.native"
     },
     "web": {
       "favicon": "./assets/images/favicon.png"
