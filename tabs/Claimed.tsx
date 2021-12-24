@@ -1,12 +1,37 @@
-import { View, Text } from "react-native"
+import { View, ScrollView, TouchableOpacity, Image, Modal, Text, StyleSheet } from "react-native"
 import { tabStyles } from "../styles/global"
+import ClaimedCard from "../components/ClaimedCard"
+import ClaimForm from "../components/ClaimForm"
+import { useState } from "react"
+
 const ClaimedTab = () => {
+  const [showModal, setShowModal] = useState(true);
   return (
     <View style={tabStyles.tabDefaults}>
-      <Text> Claimed Tab  Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. </Text>
+      <ClaimForm showModal={showModal} setShowModal={setShowModal} />
+      <ScrollView style={{ width: '100%' }}>
+        <ClaimedCard onPress={() => { console.log("clicked on") }} title="Striped Umbrella" claimDate="1/08/2022" image={require('../assets/images/sampleImage.png')} />
+      </ScrollView>
 
-    </View>
+    </View >
   )
 }
 
+const styles = StyleSheet.create({
+  fabWrapper: {
+    position: 'absolute',
+    bottom: 20,
+    right: 30,
+
+  },
+  fab: {
+    backgroundColor: "#FF9387",
+    width: 50,
+    height: 50,
+    borderRadius: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+  }
+
+})
 export default ClaimedTab;

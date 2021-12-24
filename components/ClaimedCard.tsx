@@ -1,13 +1,14 @@
+
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 
-const LostCard = (props: any) => {
+const ClaimedCard = (props: any) => {
   return (
     <TouchableOpacity activeOpacity={0.9}>
       <View style={styles.card}>
         <Image style={styles.image} source={props.image} />
         <Text style={{ fontSize: 15, fontWeight: "bold" }}>{props.title}</Text>
         <Text style={{ fontWeight: '300', }}>
-          Found at {props.location}
+          Claimed on {props.claimDate || 'claimed date'}
         </Text>
       </View>
     </TouchableOpacity>
@@ -31,4 +32,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default LostCard;
+export default ClaimedCard;
