@@ -4,20 +4,22 @@ import * as ImagePicker from 'expo-image-picker'
 import { useState } from 'react'
 import { LostItem } from '../types'
 import { globalState } from '../store/store'
-import { postLostItem } from '../db/db'
+import { editItem, postLostItem } from '../db/db'
+import Button from './Button'
 
 // https://tinypng.com/developers
 const UploadForm = (props: any) => {
   const [image, setImage] = useState<string | null>(null);
-  const [itemTitle, setItemTitle] = useState('');
-  const [itemLocation, setItemLocation] = useState('');
+  const [currentImage, setCurrentImage] = useState(props.item.onlineImage)
+  const [itemTitle, setItemTitle] = useState(props.item.title);
+  const [itemLocation, setItemLocation] = useState(props.item.location);
   const [errors, setErrors] = useState({ title: '', location: '', image: '' })
   const userID = globalState.loggedInUser?.id || ''
   const [base64Image, setBase64Image] = useState('')
   const [isLoading, setIsLoading] = useState(false);
 
 
-  async function createPost() {
+  async function editPost() {
     setErrors({ title: '', location: '', image: '' })
     let errorEncounter = false;
     if (itemTitle.length < 4) {
@@ -34,39 +36,35 @@ const UploadForm = (props: any) => {
       }))
       errorEncounter = true;
     }
-    if (!image) {
-      setErrors((err) => ({
-        ...err,
-        image: 'Please provide and image of the item'
-      }))
-      errorEncounter = true;
-    }
     if (errorEncounter) return;
 
     setIsLoading(true);
 
-    const lostItem: LostItem = {
-      id: Date.now().toString(),
+    const editedItem: LostItem = {
+      id: props.item.id,
       title: itemTitle,
       location: itemLocation,
-      localImage: image,
-      onlineImage: '',
+      localImage: image ? image : props.item.image,
+      onlineImage: image ? "" : props.item.onlineImage,
+      finderNumber: props.item.finderNumber,
       finderID: userID,
-      finderNumber: globalState.loggedInUser?.user_metadata.phoneNumber,
-      datePosted: (new Date()).toISOString(),
+      datePosted: props.item.datePosted,
       isClaimed: false,
       claimDate: null,
       claimerID: null,
       isDeleted: false
     }
-    const { error } = await postLostItem(lostItem, base64Image) as any;
+    const { error } = await editItem(editedItem, base64Image) as any;
+    if (error) {
+      console.log(error)
+    }
     setIsLoading(false);
 
     setItemTitle('');
     setItemLocation('');
     setImage(null);
 
-    props.setShowUploadForm(false);
+    props.editDone()
   }
 
   const pickImage = async () => {
@@ -113,12 +111,14 @@ const UploadForm = (props: any) => {
       visible={props.showUploadForm}>
       <View style={styles.container}>
 
+        <Pressable onPress={() => { props.cancelEdit() }}
+        >
+          <View style={styles.closeModal}>
+            <Image style={{ width: 20, height: 20 }} source={require('../assets/images/close.png')} />
+          </View>
+        </Pressable>
 
         <View style={styles.formWrapper}>
-          <Pressable style={styles.closeModal} onPress={() => { props.setShowUploadForm(false) }}
-          >
-            <Image style={{ width: 15, height: 15 }} source={require('../assets/images/xwhite.png')} />
-          </Pressable>
           {isLoading &&
             <View style={styles.loader}>
               <ActivityIndicator size="large" color="black" />
@@ -126,19 +126,9 @@ const UploadForm = (props: any) => {
             </View>
           }
 
-          <Text style={{ fontSize: 25, marginBottom: 10, fontWeight: "bold", alignSelf: 'center' }}> Post a Lost Item </Text>
-          <View style={{ width: '100%', marginBottom: 10 }} >
-            <Text style={{ marginBottom: 5 }}>What is the Item 🏮</Text>
-            <TextInput value={itemTitle} onChangeText={(text) => setItemTitle(text)} style={formStyles.input} />
-            {errors.title != '' && <Text style={{ color: 'red', fontSize: 12, marginLeft: 10 }}>{errors.title}</Text>}
-          </View>
-          <View style={{ width: '100%', marginBottom: 10 }} >
-            <Text style={{ marginBottom: 5 }}>Where did you find it 🗺</Text>
-            <TextInput value={itemLocation} onChangeText={(text) => setItemLocation(text)} style={formStyles.input} />
-            {errors.location != '' && <Text style={{ color: 'red', fontSize: 12, marginLeft: 10 }}>{errors.location}</Text>}
-          </View>
+          <Text style={{ fontSize: 25, marginBottom: 10, fontWeight: "bold", alignSelf: 'center' }}> Edit Item Details</Text>
           <View style={{ width: '100%', marginBottom: 20 }} >
-            <Text style={{ marginBottom: 5, textAlign: 'center' }}>Add a picture of the item 🖼 (landscape)</Text>
+            <Text style={{ marginBottom: 5, textAlign: 'center' }}>Change picture of the item (landscape)</Text>
             <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
               <TouchableOpacity onPress={() => { pickImage() }} >
                 <View style={styles.smallButton} >
@@ -153,10 +143,21 @@ const UploadForm = (props: any) => {
             </View>
             {errors.image != '' && <Text style={{ color: 'red', textAlign: 'center', fontSize: 12, marginLeft: 10 }}>{errors.image}</Text>}
           </View>
-          {image && <Image source={{ uri: image }} style={styles.uploadImage} />}
-          <TouchableOpacity onPress={createPost} >
+          {image ? <Image source={{ uri: image }} style={styles.uploadImage} /> : <Image source={{ uri: currentImage }} style={styles.uploadImage} />}
+
+          <View style={{ width: '100%', marginBottom: 10 }} >
+            <Text style={{ marginBottom: 5 }}>What is the Item</Text>
+            <TextInput value={itemTitle} onChangeText={(text) => setItemTitle(text)} style={formStyles.input} />
+            {errors.title != '' && <Text style={{ color: 'red', fontSize: 12, marginLeft: 10 }}>{errors.title}</Text>}
+          </View>
+          <View style={{ width: '100%', marginBottom: 10 }} >
+            <Text style={{ marginBottom: 5 }}>Where did you find it</Text>
+            <TextInput value={itemLocation} onChangeText={(text) => setItemLocation(text)} style={formStyles.input} />
+            {errors.location != '' && <Text style={{ color: 'red', fontSize: 12, marginLeft: 10 }}>{errors.location}</Text>}
+          </View>
+          <TouchableOpacity onPress={editPost} >
             <View style={formStyles.button} >
-              <Text style={{ color: "white", fontWeight: "bold" }} >Post</Text>
+              <Text style={{ color: "white", fontWeight: "bold" }} >Save Changes</Text>
             </View>
           </TouchableOpacity>
         </View>
@@ -167,7 +168,7 @@ const UploadForm = (props: any) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'rgba(0,0,0,0.7)',
+    backgroundColor: "rgba(0,0,0,0.35)",
     height: "100%",
     width: "100%",
     justifyContent: 'flex-end',
@@ -177,9 +178,11 @@ const styles = StyleSheet.create({
     elevation: 20,
     backgroundColor: 'white',
     padding: 20,
+    marginTop: 10,
     width: "100%",
-    borderTopRightRadius: 30,
-    borderTopLeftRadius: 30,
+    // borderTopLeftRadius: 30,
+    // borderTopRightRadius: 30,
+    overflow: 'hidden',
   },
   form: {
     alignSelf: 'center',
@@ -198,8 +201,6 @@ const styles = StyleSheet.create({
   },
   loader: {
     position: 'absolute',
-    borderTopRightRadius: 30,
-    borderTopLeftRadius: 30,
     zIndex: 3,
     bottom: 0,
     left: 0,
@@ -210,20 +211,13 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(255,255,255,0.9)",
   },
   closeModal: {
-    position: 'absolute',
-    top: 0,
-    zIndex: 4,
-    // elevation: 10,
-    backgroundColor: "crimson",
-    borderColor: 'white',
-    borderWidth: 4,
-    transform: [
-      { translateY: -30 }
-    ],
+    elevation: 5,
+    marginTop: -20,
+    backgroundColor: "white",
     borderRadius: 30,
     padding: 20,
-    width: 55,
-    height: 55,
+    width: 50,
+    height: 50,
     alignSelf: 'center',
     justifyContent: 'center',
     alignItems: 'center',

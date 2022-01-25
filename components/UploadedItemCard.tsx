@@ -1,62 +1,67 @@
 
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
+import Button from "./Button";
 
 const UploadedItemCard = (props: any) => {
   return (
     <TouchableOpacity activeOpacity={0.9}>
       <View style={styles.card}>
         <View style={styles.indicatorIcon}>
-          <Image style={{ width: 20, height: 20, }} source={require('../assets/images/stillMissing.png')} />
+          {!props.item.isClaimed && <Image style={{ width: 20, height: 20, }} source={require('../assets/images/stillMissing.png')} />}
+          {props.item.isClaimed && <Image style={{ width: 20, height: 20, }} source={require('../assets/images/found.png')} />}
         </View>
-        <Image style={styles.image} source={props.image || require('../assets/images/sampleImage.png')} />
-        <Text style={{ fontSize: 15, fontWeight: "bold" }}>{props.title || 'samplem title'}</Text>
-        <Text style={{ fontWeight: '300', marginBottom: 0 }}>
-          Found at {props.location || 'location'}
-        </Text>
+        <Image style={styles.image} source={{ uri: props.item.onlineImage }} />
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Image source={require('../assets/images/box.png')} style={{ width: 15, height: 15, marginRight: 5 }} />
+          <Text style={{ fontSize: 15, fontWeight: "bold" }}>{props.item.title}</Text>
+        </View>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Image source={require('../assets/images/location.png')} style={{ width: 15, height: 15, marginRight: 5 }} />
+          <Text style={{ fontWeight: '300', }}>{props.item.location}</Text>
+        </View>
         <View style={styles.footer}>
-          <View>
-            <TouchableOpacity onPress={() => { }} >
-              <View style={styles.smallButton} >
-                <Text style={{ color: "white", fontWeight: "900" }} >Mark as Returned</Text>
+          <View style={{ width: '100%' }}>
+            {!props.item.isClaimed &&
+              <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between' }}>
+                <TouchableOpacity onPress={() => { props.editItem() }} >
+                  <View style={[styles.roundButton, { marginRight: 10, backgroundColor: "#F6D3BC" }]} >
+                    <Image style={{ width: 20, height: 20 }} source={require('../assets/images/edit.png')} />
+                  </View>
+                </TouchableOpacity>
+                <Button isLoading={props.isLoading} text={"Mark as Returned"} textColor={"white"} color={'#71BF8C'} onPress={() => props.toggleIsReturned(true)} />
+                <TouchableOpacity onPress={() => { props.deleteItem() }} >
+                  <View style={[styles.roundButton, { backgroundColor: "#FFC1C1" }]} >
+                    <Image style={{ width: 30, height: 30 }} source={require('../assets/images/delete.png')} />
+                  </View>
+                </TouchableOpacity>
               </View>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.actions}>
-            <TouchableOpacity onPress={() => { }} >
-              <View style={[styles.roundButton, { marginRight: 10, backgroundColor: "#F6D3BC" }]} >
-                <Image style={{ width: 20, height: 20 }} source={require('../assets/images/edit.png')} />
+            }
+            {props.item.isClaimed &&
+              <View style={{ width: '100%', alignItems: 'center', padding: 10, }}>
+                <Button isLoading={props.isLoading} text={"Mark as not Returned"} textColor={"white"} color={'crimson'} onPress={() => props.toggleIsReturned(false)} />
               </View>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => { }} >
-              <View style={[styles.roundButton, { backgroundColor: "#FFC1C1" }]} >
-                <Image style={{ width: 30, height: 30 }} source={require('../assets/images/delete.png')} />
-              </View>
-            </TouchableOpacity>
+            }
           </View>
         </View>
       </View>
-    </TouchableOpacity>
+    </TouchableOpacity >
   )
 }
 
 const styles = StyleSheet.create({
   card: {
-    elevation: 2,
-    shadowColor: '#898989',
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    borderBottomRightRadius: 30,
-    borderBottomLeftRadius: 30,
+    backgroundColor: 'white',
+    borderRadius: 25,
+    elevation: 10,
     padding: 10,
-    marginTop: 5,
-    marginBottom: 20,
+    margin: 10,
     width: "90%",
     alignSelf: 'center'
   },
   image: {
+    borderRadius: 20,
     width: "100%",
     height: 200,
-    borderRadius: 20,
     marginBottom: 7,
   },
   indicatorIcon: {
@@ -92,7 +97,6 @@ const styles = StyleSheet.create({
     paddingRight: 20,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: '#71BF8C',
   },
   roundButton: {
     borderRadius: 20,

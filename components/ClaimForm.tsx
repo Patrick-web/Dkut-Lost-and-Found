@@ -1,35 +1,43 @@
 
-import { View, Modal, Image, Text, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, Modal, Image, Text, StyleSheet, TouchableOpacity, Pressable } from 'react-native'
+import * as Linking from "expo-linking"
 
 const ClaimForm = (props: any) => {
+
   return (
     <Modal
       animationType="slide"
       style={{ backgroundColor: "rgba(0,0,0,0.5)", }}
       transparent={true}
-      visible={props.showModal}>
+      visible={props.showModal || false}>
       <View style={styles.container}>
-        <View style={styles.card}>
-          <Image style={{ width: "100%", borderRadius: 20, marginBottom: 10 }} source={require('../assets/images/sampleImage.png')} />
-          <Text>Blacked striped umbrella</Text>
-          <Text>Found at Rc18</Text>
-          <View style={styles.warning}>
-            <Image style={{ width: 40, height: 40, marginRight: 15 }} source={require('../assets/images/warning.png')} />
-            <Text style={{ width: "80%", color: "#FFB800", fontWeight: "bold" }}>Any issuie regarding wrongly claimed items must be resolved with the Finder. The platform does not handle these cases.</Text>
-          </View>
-          <TouchableOpacity >
-            <View style={styles.primaryButton} >
-              <Text style={{ color: "white", fontWeight: "900" }} >Call Finder</Text>
-            </View>
-          </TouchableOpacity>
-        </View>
-        <TouchableOpacity activeOpacity={0.6}
+        <Pressable
           onPress={() => { props.setShowModal(false) }}
         >
           <View style={styles.closeModal}>
             <Image style={{ width: 20, height: 20 }} source={require('../assets/images/close.png')} />
           </View>
-        </TouchableOpacity>
+        </Pressable>
+
+        <View style={styles.card}>
+          <Image source={require('../assets/images/shadow.png')} style={{ position: 'absolute', top: -20, left: 0, width: '100%', }} />
+          <View style={{ width: '100%', height: 200, marginBottom: 10 }}>
+            <Image style={{ width: "100%", height: "100%", }} source={{ uri: props.item.onlineImage }} />
+          </View>
+          <View style={{ padding: 10 }}>
+            <Text>{props.item.title}</Text>
+            <Text>{props.item.location} </Text>
+            <View style={styles.warning}>
+              <Image style={{ width: 40, height: 40, marginRight: 15 }} source={require('../assets/images/warning.png')} />
+              <Text style={{ width: "80%", color: "#FFB800", fontWeight: "bold" }}>Any issue regarding wrongly claimed items must be resolved with the Finder. The platform does not handle these cases.</Text>
+            </View>
+            <TouchableOpacity onPress={() => { Linking.openURL(`tel:${props.item.finderNumber}`) }}>
+              <View style={styles.primaryButton} >
+                <Text style={{ color: "white", fontWeight: "900" }} >Call Finder</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        </View>
       </View>
     </Modal>
   )
@@ -37,19 +45,18 @@ const ClaimForm = (props: any) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "rgba(0,0,0,0.5)",
+    backgroundColor: "rgba(0,0,0,0.7)",
+    // backgroundColor: "black",
     height: "100%",
     width: "100%",
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
     alignItems: 'center',
   },
   card: {
+    elevation: 5,
     alignSelf: 'center',
-    // opacity: 0,  
-    width: "91%",
-    borderRadius: 20,
+    width: "100%",
     backgroundColor: "white",
-    padding: 10,
   },
   warning: {
     marginTop: 10,
@@ -73,7 +80,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   closeModal: {
-    marginTop: 20,
+    elevation: 8,
+    marginBottom: 20,
     backgroundColor: "white",
     borderRadius: 30,
     padding: 20,

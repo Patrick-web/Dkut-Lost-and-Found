@@ -1,34 +1,49 @@
-import { View, Modal, Image, Text, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, Modal, Image, Text, StyleSheet, TouchableOpacity, Linking, Pressable } from 'react-native'
+import Button from './Button'
 
 const PopoutItem = (props: any) => {
+  function callFinder() {
+    Linking.openURL(`tel:${props.item.finderNumber}`)
+    props.setShowModal(false)
+  }
   return (
     <Modal
       animationType="slide"
-      style={{ backgroundColor: "rgba(0,0,0,0.5)", }}
       transparent={true}
       visible={props.showModal}>
+
       <View style={styles.container}>
-        <View style={styles.card}>
-          <Image style={{ width: "100%", borderRadius: 20, marginBottom: 10 }} source={require('../assets/images/sampleImage.png')} />
-          <Text>Blacked striped umbrella</Text>
-          <Text>Found at Rc18</Text>
-          <View style={styles.warning}>
-            <Image style={{ width: 40, height: 40, marginRight: 15 }} source={require('../assets/images/warning.png')} />
-            <Text style={{ width: "80%", color: "#FFB800", fontWeight: "bold" }}>You will need to provide further details of the item to confirm to the finder that you are the actual owner</Text>
-          </View>
-          <TouchableOpacity >
-            <View style={styles.primaryButton} >
-              <Text style={{ color: "white", fontWeight: "900" }} >Call Finder</Text>
-            </View>
-          </TouchableOpacity>
-        </View>
-        <TouchableOpacity activeOpacity={0.6}
+        <Pressable
           onPress={() => { props.setShowModal(false) }}
         >
           <View style={styles.closeModal}>
             <Image style={{ width: 20, height: 20 }} source={require('../assets/images/close.png')} />
           </View>
-        </TouchableOpacity>
+        </Pressable>
+
+        <View style={styles.card}>
+          <Image source={require('../assets/images/shadow.png')} style={{ position: 'absolute', top: -20, left: 0, width: '100%', }} />
+          <View style={{ width: '100%', height: 200, }}>
+            <Image style={{ width: "100%", height: "100%", }} source={{ uri: props.item.onlineImage }} />
+          </View>
+          <View style={{ padding: 10 }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Image source={require('../assets/images/box.png')} style={{ width: 15, height: 15, marginRight: 5 }} />
+              <Text style={{ fontSize: 15, fontWeight: "bold" }}>{props.item.title}</Text>
+            </View>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Image source={require('../assets/images/location.png')} style={{ width: 15, height: 15, marginRight: 5 }} />
+              <Text style={{ fontWeight: '300', }}>{props.item.location}</Text>
+            </View>
+            <View style={styles.warning}>
+              <Image style={{ width: 40, height: 40, marginRight: 15 }} source={require('../assets/images/warning.png')} />
+              <Text style={{ width: "80%", color: "#FFB800", fontWeight: "bold" }}>You will need to provide further details of the item to confirm to the finder that you are the actual owner</Text>
+            </View>
+            <View style={{ alignItems: 'center', padding: 10 }}>
+              <Button text={'Call Finder'} color={"#FF9387"} width={'50%'} onPress={callFinder} />
+            </View>
+          </View>
+        </View>
       </View>
     </Modal>
   )
@@ -36,19 +51,17 @@ const PopoutItem = (props: any) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "rgba(0,0,0,0.5)",
+    backgroundColor: 'rgba(0,0,0,0.7)',
     height: "100%",
     width: "100%",
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
     alignItems: 'center',
   },
   card: {
+    elevation: 40,
     alignSelf: 'center',
-    // opacity: 0,  
-    width: "91%",
-    borderRadius: 20,
+    width: "100%",
     backgroundColor: "white",
-    padding: 10,
   },
   warning: {
     marginTop: 10,
@@ -72,7 +85,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   closeModal: {
-    marginTop: 20,
+    elevation: 5,
+    marginBottom: 20,
     backgroundColor: "white",
     borderRadius: 30,
     padding: 20,

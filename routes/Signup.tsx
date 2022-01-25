@@ -1,13 +1,21 @@
+import { useState } from 'react';
 import { View, Image, Text, StyleSheet } from 'react-native';
+import Button from '../components/Button';
+import LoadingIndicator from '../components/LoadingIndicator';
 import LoginForm from "../components/SignupForm"
 
 const SignUp = ({ navigation }: { navigation: any }) => {
+  const [isLoading, setIsLoading] = useState(false);
   return (
     <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
       <Image style={styles.waveTop} source={require('../assets/images/wave1.png')} />
       <Text style={styles.pageTitle} >Signup</Text>
-      <LoginForm />
+      <LoginForm navigation={navigation} setIsLoading={setIsLoading} />
       <Image style={styles.waveBottom} source={require('../assets/images/wave2.png')} />
+      <View style={{ position: 'absolute', left: 0, right: 0, bottom: 0, width: '100%', alignItems: 'center', padding: 10 }}>
+        <Button onPress={() => navigation.navigate('Login')} style={{ elevation: 4 }} textColor={"#FF9387"} width={100} padding={5} radius={20} color={'white'} text={'Login'} />
+      </View>
+      {isLoading && <LoadingIndicator />}
     </View>
   )
 }

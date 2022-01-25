@@ -6,6 +6,7 @@
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { CompositeScreenProps, NavigatorScreenParams } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { User } from '@supabase/supabase-js';
 
 declare global {
   namespace ReactNavigation {
@@ -40,3 +41,32 @@ export interface ExpoImageResult {
   width: number;
   uri: string;
 };
+
+export interface AppUser {
+  id: string;
+  fullName: string;
+  phoneNumber: string;
+  email: string;
+  password: string;
+};
+
+export interface LostItem {
+  id: string;
+  title: string;
+  location: string;
+  localImage: string | null;
+  onlineImage: string;
+  finderID: string;
+  finderNumber: string;
+  datePosted: string;
+  isClaimed: boolean;
+  claimDate: string | null;
+  claimerID: string | null;
+  isDeleted: boolean;
+};
+
+
+export interface GlobalState {
+  loggedInUser: User | null;
+};
+
