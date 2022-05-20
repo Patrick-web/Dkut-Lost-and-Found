@@ -4,21 +4,22 @@
     "slug": "DFound",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
+    "icon": "./assets/images/appImages/icon.png",
+    "scheme": "dfound",
     "userInterfaceStyle": "automatic",
+    "jsEngine": "hermes",
     "plugins": [
       [
         "expo-image-picker",
         {
-          "photosPermission": "The app accesses your photos to let you share them with your friends."
+          "photosPermission": "The app requires access to your photos"
         }
       ]
     ],
     "splash": {
-      "image": "./assets/images/splash.png",
+      "image": "./assets/images/appImages/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#FFEDCF"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -31,10 +32,10 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "foregroundImage": "./assets/images/appImages/adaptive-icon.png",
+        "backgroundColor": "#FFEDCF"
       },
-      "package": "com.react.native"
+      "package": "com.pntx.dfound"
     },
     "web": {
       "favicon": "./assets/images/favicon.png"

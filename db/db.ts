@@ -25,8 +25,6 @@ export async function signUpUser(newUser: AppUser) {
   )
 
   if (user) {
-    console.log('supabse user')
-    console.log(user)
     return user;
   } else {
     console.log('error')
@@ -43,7 +41,7 @@ export async function signInUser(email: string, password: string) {
   })
 
   if (user) {
-    console.log('supabse user')
+    console.log('supabase user')
     return user;
   } else {
     console.log('error')
@@ -63,7 +61,7 @@ export async function updateUserInfo(newDetails: any) {
     }
   })
   if (user) {
-    console.log('supabse user')
+    console.log('supabase user')
     console.log(user)
     return user;
   } else {
@@ -80,7 +78,7 @@ export async function getAllLostItems() {
     .select('*')
     .eq('isClaimed', false)
     .eq('isDeleted', false)
-    .order('datePosted', { ascending: true })
+    .order('datePosted', { ascending: false })
   if (!error) {
     return data;
   } else {
@@ -94,7 +92,6 @@ export async function getAllClaimedItems() {
     .from('Lost')
     .select('*')
     .eq('isClaimed', true)
-    .eq('isDeleted', false)
     .order('claimDate', { ascending: true })
   if (!error) {
     console.log(data);
@@ -222,7 +219,8 @@ export async function getUserPostedItems(userID: string) {
     .select('*')
     .eq('finderID', userID)
     .eq('isDeleted', false)
-    .order('datePosted', { ascending: true })
+    .order('isClaimed', { ascending: true })
+    .order('datePosted', { ascending: false })
   if (!error) {
     console.log(data);
     return data;

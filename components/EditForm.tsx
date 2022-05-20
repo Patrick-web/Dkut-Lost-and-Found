@@ -1,4 +1,4 @@
-import { View, Modal, Image, Text, StyleSheet, TextInput, TouchableOpacity, ActivityIndicator, Pressable, } from 'react-native'
+import { View, Modal, Image, Text, StyleSheet, TextInput, ActivityIndicator, Pressable, } from 'react-native'
 import { formStyles } from "../styles/global"
 import * as ImagePicker from 'expo-image-picker'
 import { useState } from 'react'
@@ -130,16 +130,16 @@ const UploadForm = (props: any) => {
           <View style={{ width: '100%', marginBottom: 20 }} >
             <Text style={{ marginBottom: 5, textAlign: 'center' }}>Change picture of the item (landscape)</Text>
             <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-              <TouchableOpacity onPress={() => { pickImage() }} >
+              <Pressable onPress={() => { pickImage() }} >
                 <View style={styles.smallButton} >
                   <Text style={{ color: "white", fontWeight: "900" }} >Select Photo</Text>
                 </View>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => { captureImage() }} >
+              </Pressable>
+              <Pressable onPress={() => { captureImage() }} >
                 <View style={[styles.smallButton, { marginLeft: 20 }]} >
                   <Text style={{ color: "white", fontWeight: "900" }} >Take Photo</Text>
                 </View>
-              </TouchableOpacity>
+              </Pressable>
             </View>
             {errors.image != '' && <Text style={{ color: 'red', textAlign: 'center', fontSize: 12, marginLeft: 10 }}>{errors.image}</Text>}
           </View>
@@ -155,11 +155,11 @@ const UploadForm = (props: any) => {
             <TextInput value={itemLocation} onChangeText={(text) => setItemLocation(text)} style={formStyles.input} />
             {errors.location != '' && <Text style={{ color: 'red', fontSize: 12, marginLeft: 10 }}>{errors.location}</Text>}
           </View>
-          <TouchableOpacity onPress={editPost} >
+          <Pressable onPress={editPost} >
             <View style={formStyles.button} >
               <Text style={{ color: "white", fontWeight: "bold" }} >Save Changes</Text>
             </View>
-          </TouchableOpacity>
+          </Pressable>
         </View>
       </View>
     </Modal>

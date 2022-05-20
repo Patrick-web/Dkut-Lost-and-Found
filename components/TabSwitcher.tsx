@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { View, Image, Text, StyleSheet, TouchableOpacity } from "react-native"
+import { View, Image, Text, StyleSheet, Pressable } from "react-native"
 
 
 
@@ -9,31 +9,31 @@ const TabSwitcher = () => {
 
   return (
     <View style={styles.switcher}>
-      <TouchableOpacity onPress={() => {
+      <Pressable onPress={() => {
         setActiveTab('lost')
       }}>
         <View style={[styles.switch, activeTab == 'lost' ? styles.activeSwitch : {}]}>
           <Image style={{ width: 20, height: 20 }} source={require('../assets/images/lost.png')} />
           <Text style={styles.switchLabel}>Lost</Text>
         </View>
-      </TouchableOpacity>
+      </Pressable>
 
-      <TouchableOpacity onPress={() => {
+      <Pressable onPress={() => {
         setActiveTab('claimed')
       }}>
         <View style={[styles.switch, activeTab == 'claimed' ? styles.activeSwitch : {}]}>
           <Image style={{ width: 20, height: 20 }} source={require('../assets/images/claimed.png')} />
           <Text style={styles.switchLabel}>Claimed</Text>
         </View>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => {
+      </Pressable>
+      <Pressable onPress={() => {
         setActiveTab('account')
       }}>
         <View style={[styles.switch, activeTab == 'account' ? styles.activeSwitch : {}]}>
           <Image style={{ width: 20, height: 20 }} source={require('../assets/images/account.png')} />
           <Text style={styles.switchLabel}>Account</Text>
         </View>
-      </TouchableOpacity>
+      </Pressable>
     </View>
   )
 }

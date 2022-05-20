@@ -1,4 +1,5 @@
-import { View, Modal, Image, Text, StyleSheet, TouchableOpacity, Linking, Pressable } from 'react-native'
+import { View, Modal, Image, Text, StyleSheet, Linking } from 'react-native'
+import ImageViewer from 'react-native-image-zoom-viewer';
 import Button from './Button'
 
 const PopoutItem = (props: any) => {
@@ -6,25 +7,20 @@ const PopoutItem = (props: any) => {
     Linking.openURL(`tel:${props.item.finderNumber}`)
     props.setShowModal(false)
   }
+
+
   return (
     <Modal
+      onRequestClose={()=>props.setShowModal(false)}
       animationType="slide"
       transparent={true}
       visible={props.showModal}>
 
       <View style={styles.container}>
-        <Pressable
-          onPress={() => { props.setShowModal(false) }}
-        >
-          <View style={styles.closeModal}>
-            <Image style={{ width: 20, height: 20 }} source={require('../assets/images/close.png')} />
-          </View>
-        </Pressable>
-
         <View style={styles.card}>
           <Image source={require('../assets/images/shadow.png')} style={{ position: 'absolute', top: -20, left: 0, width: '100%', }} />
-          <View style={{ width: '100%', height: 200, }}>
-            <Image style={{ width: "100%", height: "100%", }} source={{ uri: props.item.onlineImage }} />
+          <View style={{ width: '100%', height: 300, }}>
+            <ImageViewer enableImageZoom={true} backgroundColor="black" renderIndicator={()=>null} imageUrls={[{url:props.item.onlineImage}]} />
           </View>
           <View style={{ padding: 10 }}>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -39,7 +35,7 @@ const PopoutItem = (props: any) => {
               <Image style={{ width: 40, height: 40, marginRight: 15 }} source={require('../assets/images/warning.png')} />
               <Text style={{ width: "80%", color: "#FFB800", fontWeight: "bold" }}>You will need to provide further details of the item to confirm to the finder that you are the actual owner</Text>
             </View>
-            <View style={{ alignItems: 'center', padding: 10 }}>
+            <View style={{padding: 10, justifyContent:'center',alignItems:'center' }}>
               <Button text={'Call Finder'} color={"#FF9387"} width={'50%'} onPress={callFinder} />
             </View>
           </View>
@@ -51,7 +47,7 @@ const PopoutItem = (props: any) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'rgba(0,0,0,0.7)',
+    backgroundColor: 'rgba(0,0,0,0.4)',
     height: "100%",
     width: "100%",
     justifyContent: 'flex-end',
@@ -87,7 +83,7 @@ const styles = StyleSheet.create({
   closeModal: {
     elevation: 5,
     marginBottom: 20,
-    backgroundColor: "white",
+    backgroundColor: "crimson",
     borderRadius: 30,
     padding: 20,
     width: 50,
@@ -95,6 +91,8 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     justifyContent: 'center',
     alignItems: 'center',
+    borderColor: 'white',
+    borderWidth: 4,
   },
 })
 export default PopoutItem;

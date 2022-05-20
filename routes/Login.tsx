@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { View, Image, Text, StyleSheet } from 'react-native';
 import Button from '../components/Button';

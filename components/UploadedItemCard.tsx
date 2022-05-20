@@ -1,10 +1,10 @@
 
-import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, Image, StyleSheet, Pressable } from "react-native";
 import Button from "./Button";
 
 const UploadedItemCard = (props: any) => {
   return (
-    <TouchableOpacity activeOpacity={0.9}>
+    <Pressable>
       <View style={styles.card}>
         <View style={styles.indicatorIcon}>
           {!props.item.isClaimed && <Image style={{ width: 20, height: 20, }} source={require('../assets/images/stillMissing.png')} />}
@@ -23,17 +23,17 @@ const UploadedItemCard = (props: any) => {
           <View style={{ width: '100%' }}>
             {!props.item.isClaimed &&
               <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between' }}>
-                <TouchableOpacity onPress={() => { props.editItem() }} >
+                <Pressable onPress={() => { props.editItem() }} >
                   <View style={[styles.roundButton, { marginRight: 10, backgroundColor: "#F6D3BC" }]} >
                     <Image style={{ width: 20, height: 20 }} source={require('../assets/images/edit.png')} />
                   </View>
-                </TouchableOpacity>
+                </Pressable>
                 <Button isLoading={props.isLoading} text={"Mark as Returned"} textColor={"white"} color={'#71BF8C'} onPress={() => props.toggleIsReturned(true)} />
-                <TouchableOpacity onPress={() => { props.deleteItem() }} >
+                <Pressable onPress={() => { props.deleteItem() }} >
                   <View style={[styles.roundButton, { backgroundColor: "#FFC1C1" }]} >
                     <Image style={{ width: 30, height: 30 }} source={require('../assets/images/delete.png')} />
                   </View>
-                </TouchableOpacity>
+                </Pressable>
               </View>
             }
             {props.item.isClaimed &&
@@ -44,7 +44,7 @@ const UploadedItemCard = (props: any) => {
           </View>
         </View>
       </View>
-    </TouchableOpacity >
+    </Pressable >
   )
 }
 

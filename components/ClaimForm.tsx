@@ -1,28 +1,22 @@
 
-import { View, Modal, Image, Text, StyleSheet, TouchableOpacity, Pressable } from 'react-native'
+import { View, Modal, Image, Text, StyleSheet,  Pressable } from 'react-native'
+import ImageViewer from 'react-native-image-zoom-viewer';
 import * as Linking from "expo-linking"
 
 const ClaimForm = (props: any) => {
 
   return (
     <Modal
+      onRequestClose={()=>props.setShowModal(false)}
       animationType="slide"
       style={{ backgroundColor: "rgba(0,0,0,0.5)", }}
       transparent={true}
       visible={props.showModal || false}>
       <View style={styles.container}>
-        <Pressable
-          onPress={() => { props.setShowModal(false) }}
-        >
-          <View style={styles.closeModal}>
-            <Image style={{ width: 20, height: 20 }} source={require('../assets/images/close.png')} />
-          </View>
-        </Pressable>
-
         <View style={styles.card}>
           <Image source={require('../assets/images/shadow.png')} style={{ position: 'absolute', top: -20, left: 0, width: '100%', }} />
-          <View style={{ width: '100%', height: 200, marginBottom: 10 }}>
-            <Image style={{ width: "100%", height: "100%", }} source={{ uri: props.item.onlineImage }} />
+          <View style={{ width: '100%', height: 300, }}>
+            <ImageViewer enableImageZoom={true} backgroundColor="black" renderIndicator={()=>null} imageUrls={[{url:props.item.onlineImage}]} />
           </View>
           <View style={{ padding: 10 }}>
             <Text>{props.item.title}</Text>
@@ -31,11 +25,11 @@ const ClaimForm = (props: any) => {
               <Image style={{ width: 40, height: 40, marginRight: 15 }} source={require('../assets/images/warning.png')} />
               <Text style={{ width: "80%", color: "#FFB800", fontWeight: "bold" }}>Any issue regarding wrongly claimed items must be resolved with the Finder. The platform does not handle these cases.</Text>
             </View>
-            <TouchableOpacity onPress={() => { Linking.openURL(`tel:${props.item.finderNumber}`) }}>
+            <Pressable onPress={() => { Linking.openURL(`tel:${props.item.finderNumber}`) }}>
               <View style={styles.primaryButton} >
                 <Text style={{ color: "white", fontWeight: "900" }} >Call Finder</Text>
               </View>
-            </TouchableOpacity>
+            </Pressable>
           </View>
         </View>
       </View>

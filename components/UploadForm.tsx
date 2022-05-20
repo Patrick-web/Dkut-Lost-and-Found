@@ -1,4 +1,4 @@
-import { View, Modal, Image, Text, StyleSheet, TextInput, TouchableOpacity, ActivityIndicator, Pressable, } from 'react-native'
+import { View, Modal, Image, Text, StyleSheet, TextInput, ActivityIndicator, Pressable, } from 'react-native'
 import { formStyles } from "../styles/global"
 import * as ImagePicker from 'expo-image-picker'
 import { useState } from 'react'
@@ -6,6 +6,7 @@ import { LostItem } from '../types'
 import { globalState } from '../store/store'
 import { postLostItem } from '../db/db'
 
+import Button from './Button'
 // https://tinypng.com/developers
 const UploadForm = (props: any) => {
   const [image, setImage] = useState<string | null>(null);
@@ -94,8 +95,6 @@ const UploadForm = (props: any) => {
 
     const result = await ImagePicker.launchCameraAsync(
       {
-        allowsEditing: true,
-        aspect: [4, 3],
         quality: 0.5,
         base64: true,
       }
@@ -108,6 +107,7 @@ const UploadForm = (props: any) => {
   return (
     <Modal
       style={{ backgroundColor: "rgba(0,0,0,0.5)", }}
+      onRequestClose={()=>props.setShowUploadForm(false)}
       animationType="slide"
       transparent={true}
       visible={props.showUploadForm}>
@@ -115,10 +115,6 @@ const UploadForm = (props: any) => {
 
 
         <View style={styles.formWrapper}>
-          <Pressable style={styles.closeModal} onPress={() => { props.setShowUploadForm(false) }}
-          >
-            <Image style={{ width: 15, height: 15 }} source={require('../assets/images/xwhite.png')} />
-          </Pressable>
           {isLoading &&
             <View style={styles.loader}>
               <ActivityIndicator size="large" color="black" />
@@ -127,6 +123,17 @@ const UploadForm = (props: any) => {
           }
 
           <Text style={{ fontSize: 25, marginBottom: 10, fontWeight: "bold", alignSelf: 'center' }}> Post a Lost Item </Text>
+          <View style={{padding:10}}>
+            <View style={{ width: '100%', marginBottom: 10 }} >
+            <Text style={{ marginBottom: 5,}}>Add a picture of the item 🖼 (landscape)</Text>
+            <View style={{ flexDirection: 'row', }}>
+              <Button text={'Select Photo'} color={"#FF9387"} width={'40%'} styles={{transform: [{scale: 0.8}, {translateX:-18}]}} onPress={pickImage} />
+              <Button text={'Take Photo'} color={"#FF9387"} width={'40%'} styles={{transform: [{scale: 0.8}, {translateX:-40}]}} onPress={pickImage} />
+            </View>
+            {errors.image != '' && <Text style={{ color: 'red', textAlign: 'center', fontSize: 12, marginLeft: 10 }}>{errors.image}</Text>}
+          </View>
+          {image && <Image source={{ uri: image }} style={styles.uploadImage} />}
+
           <View style={{ width: '100%', marginBottom: 10 }} >
             <Text style={{ marginBottom: 5 }}>What is the Item 🏮</Text>
             <TextInput value={itemTitle} onChangeText={(text) => setItemTitle(text)} style={formStyles.input} />
@@ -137,28 +144,10 @@ const UploadForm = (props: any) => {
             <TextInput value={itemLocation} onChangeText={(text) => setItemLocation(text)} style={formStyles.input} />
             {errors.location != '' && <Text style={{ color: 'red', fontSize: 12, marginLeft: 10 }}>{errors.location}</Text>}
           </View>
-          <View style={{ width: '100%', marginBottom: 20 }} >
-            <Text style={{ marginBottom: 5, textAlign: 'center' }}>Add a picture of the item 🖼 (landscape)</Text>
-            <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-              <TouchableOpacity onPress={() => { pickImage() }} >
-                <View style={styles.smallButton} >
-                  <Text style={{ color: "white", fontWeight: "900" }} >Select Photo</Text>
-                </View>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => { captureImage() }} >
-                <View style={[styles.smallButton, { marginLeft: 20 }]} >
-                  <Text style={{ color: "white", fontWeight: "900" }} >Take Photo</Text>
-                </View>
-              </TouchableOpacity>
-            </View>
-            {errors.image != '' && <Text style={{ color: 'red', textAlign: 'center', fontSize: 12, marginLeft: 10 }}>{errors.image}</Text>}
           </View>
-          {image && <Image source={{ uri: image }} style={styles.uploadImage} />}
-          <TouchableOpacity onPress={createPost} >
-            <View style={formStyles.button} >
-              <Text style={{ color: "white", fontWeight: "bold" }} >Post</Text>
-            </View>
-          </TouchableOpacity>
+          <View style={{padding:10,backgroundColor:'rgba(255,147,135,0.3)',alignItems:'center'}}>
+            <Button text={'Post'} color={"#FF9387"} width={'50%'} onPress={createPost} />
+          </View>
         </View>
       </View>
     </Modal>
@@ -176,10 +165,11 @@ const styles = StyleSheet.create({
   formWrapper: {
     elevation: 20,
     backgroundColor: 'white',
-    padding: 20,
-    width: "100%",
-    borderTopRightRadius: 30,
-    borderTopLeftRadius: 30,
+    paddingTop: 10,
+    margin:20,
+    overflow:'hidden',
+    width: "90%",
+    borderRadius: 30,
   },
   form: {
     alignSelf: 'center',
@@ -190,7 +180,6 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     paddingRight: 40,
     paddingLeft: 40,
-    borderRadius: 30,
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
@@ -229,12 +218,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   smallButton: {
-    borderRadius: 20,
+    borderRadius: 10,
     backgroundColor: "#FF9387",
-    paddingTop: 5,
-    paddingBottom: 5,
-    paddingLeft: 20,
-    paddingRight: 20,
+    paddingVertical:8,
+    paddingHorizontal:12,
     justifyContent: "center",
     alignItems: "center",
   },

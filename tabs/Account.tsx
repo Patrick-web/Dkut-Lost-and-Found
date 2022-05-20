@@ -14,7 +14,7 @@ import {
 import { tabStyles } from "../styles/global"
 import { globalState } from '../store/store'
 import { useEffect, useState } from "react"
-import { deleteLostItem, getUserPostedItems, toggleItemIsReturned } from "../db/db"
+import { deleteLostItem, getUserPostedItems, supabase, toggleItemIsReturned } from "../db/db"
 import UploadedItemCard from "../components/UploadedItemCard"
 import EditForm from "../components/EditForm"
 import { LostItem } from "../types"
@@ -67,6 +67,7 @@ const AccountTab = ({ navigation }: { navigation: any }) => {
 
 
   async function logout() {
+    await supabase.auth.signOut()
     navigation.navigate('Login')
   }
 
@@ -109,6 +110,7 @@ const AccountTab = ({ navigation }: { navigation: any }) => {
     return (
       <Modal
         style={{ backgroundColor: "rgba(0,0,0,0.5)", }}
+        onRequestClose={()=>setItemToDelete(null)}
         animationType="slide"
         transparent={true}
         visible={itemToDelete ? true : false}

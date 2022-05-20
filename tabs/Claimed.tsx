@@ -1,4 +1,8 @@
-import { View, ScrollView, TouchableOpacity, Image, Modal, Text, StyleSheet, FlatList } from "react-native"
+import { View, ScrollView, Pressable, Image, Modal, Text, StyleSheet, FlatList } from "react-native"
+
+import SkeletonLoader from "expo-skeleton-loader";
+
+
 import { tabStyles } from "../styles/global"
 import ClaimedCard from "../components/ClaimedCard"
 import ClaimForm from "../components/ClaimForm"
@@ -11,8 +15,11 @@ const ClaimedTab = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null)
   const [claimedItems, setClaimedItems] = useState<LostItem[]>([])
+  const [tabState,setTabState] = useState<'fetching'|'items-fetched'|'no-items-found'>('fetching')
+
   async function fetchClaimedItems() {
-    const items = await getAllClaimedItems()
+    const items = await getAllClaimedItems() as any[]
+    items?.length > 0 ? setTabState('items-fetched') : setTabState('no-items-found')
     if (items) {
       setClaimedItems(items.reverse());
     }
@@ -29,16 +36,13 @@ const ClaimedTab = () => {
     return sub
   }
   useEffect(() => {
-    let unsub: Promise<RealtimeSubscription>;
-    fetchClaimedItems().finally(() => {
-      unsub = listenForChanges();
-    })
-    function wrap() {
-      (function unsubscribe() {
-        return async () => await unsub
-      })()
-    }
-    return wrap;
+    fetchClaimedItems();
+    listenForChanges();
+    return ()=>{
+      try{
+        supabase.removeAllSubscriptions()
+      }catch{}
+    };
   }, [])
 
   const renderCard = ({ item }: { item: any }) => {
@@ -52,7 +56,35 @@ const ClaimedTab = () => {
     )
   }
 
-  const MissingIndicator = () => {
+  const SkeletonCard = ()=>
+  (
+    <SkeletonLoader
+        boneColor={"#DDDBDD"}
+        highlightColor={"white"}
+        duration={1000}
+        style={{
+            marginVertical:5
+    }}
+    >
+        <SkeletonLoader.Container
+        >
+          <SkeletonLoader.Item
+            style={{
+              width: 330,
+              height: 200,
+              borderRadius:20
+            }}
+          />
+          <SkeletonLoader.Container style={{ paddingVertical: 10 }}>
+            <SkeletonLoader.Item
+              style={{ width: 100, height: 20, marginBottom: 5,borderRadius:25 }}
+            />
+            <SkeletonLoader.Item style={{ width: 50, height: 20, borderRadius:25 }} />
+          </SkeletonLoader.Container>
+        </SkeletonLoader.Container>
+      </SkeletonLoader>
+  )
+  const NoItemsIndicator = () => {
     return (
       <View style={{ height: '100%', alignItems: 'center', justifyContent: 'center', padding: 10 }}>
         <Image style={{ width: 400, height: 400 }} source={require('../assets/images/emptyillustration.png')} />
@@ -64,8 +96,17 @@ const ClaimedTab = () => {
   return (
     <View style={tabStyles.tabDefaults}>
       {showModal && <ClaimForm item={selectedItem} showModal={showModal} setShowModal={setShowModal} />}
-      {claimedItems.length > 0 && <Image source={require('../assets/images/waves.png')} style={{ position: 'absolute', width: 370, height: 700, top: 20 }} />}
-      {claimedItems.length === 0 ? <MissingIndicator /> : <FlatList data={claimedItems} renderItem={renderCard} keyExtractor={item => item.id} style={{ width: '100%' }} />}
+      {
+        tabState === 'no-items-found' ? <NoItemsIndicator /> 
+        : tabState==='items-fetched' ? 
+        <FlatList 
+        data={claimedItems} 
+        renderItem={renderCard} 
+        keyExtractor={item => item.id} 
+        style={{ width: '100%' }} />
+        : Array.from(Array(3).keys()).map((key)=><SkeletonCard key={key}/>) 
+      }
+
     </View >
   )
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, Image, Pressable, StyleSheet } from 'react-native';
 
 import Onboarding from 'react-native-onboarding-swiper';
 
@@ -22,30 +22,30 @@ const Dots = ({ selected }: { selected: any }) => {
 }
 
 const Skip = ({ ...props }) => (
-  <TouchableOpacity
+  <Pressable
     style={{ marginHorizontal: 10 }}
     {...props}
   >
     <Text style={{ fontSize: 16 }}>Skip</Text>
-  </TouchableOpacity>
+  </Pressable>
 );
 
 const Next = ({ ...props }) => (
-  <TouchableOpacity
+  <Pressable
     style={{ marginHorizontal: 10, backgroundColor: 'white', paddingVertical: 5, paddingHorizontal: 10, borderRadius: 20 }}
     {...props}
   >
     <Text style={{ fontSize: 14, fontWeight: 'bold' }}>Next</Text>
-  </TouchableOpacity>
+  </Pressable>
 );
 
 const Done = ({ ...props }) => (
-  <TouchableOpacity
+  <Pressable
     style={{ marginHorizontal: 10, backgroundColor: 'white', paddingVertical: 5, paddingHorizontal: 15, borderRadius: 20 }}
     {...props}
   >
     <Text style={{ fontSize: 14, fontWeight: 'bold' }}>Fiti</Text>
-  </TouchableOpacity>
+  </Pressable>
 );
 
 const OnboardingScreen = ({ navigation }: { navigation: any }) => {

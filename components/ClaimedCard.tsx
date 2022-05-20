@@ -1,33 +1,42 @@
 
-import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, Image, StyleSheet, Pressable } from "react-native";
 import { LostItem } from "../types";
 
 
 const ClaimedCard = ({ item, onPress }: { item: LostItem, onPress: any }) => {
   return (
-    <TouchableOpacity onPress={onPress} activeOpacity={0.9}>
+    <Pressable onPress={onPress}>
       <View style={styles.card}>
         <Image style={styles.image} source={{ uri: item.onlineImage }} />
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Image source={require('../assets/images/box.png')} style={{ width: 15, height: 15, marginRight: 5 }} />
-          <Text style={{ fontSize: 15, fontWeight: "bold" }}>{item.title}</Text>
-        </View>
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Image source={require('../assets/images/location.png')} style={{ width: 15, height: 15, marginRight: 5 }} />
-          <Text style={{ fontWeight: '300', }}>{item.location}</Text>
+        <View style={{marginTop:-80,marginLeft:10}}>
+          <View style={styles.cardInfo}>
+            <Image source={require('../assets/images/box.png')} style={{ width: 15, height: 15, marginRight: 5 }} />
+            <Text style={{ fontSize: 15, fontWeight: "bold" }}>{item.title}</Text>
+          </View>
+          <View style={styles.cardInfo}>
+            <Image source={require('../assets/images/location.png')} style={{ width: 15, height: 15, marginRight: 5 }} />
+            <Text style={{ fontWeight: '300', }}>{item.location}</Text>
+          </View>
         </View>
       </View>
-    </TouchableOpacity>
+    </Pressable>
   )
 }
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: 'white',
-    borderRadius: 25,
-    padding: 10,
-    margin: 10,
-    elevation: 5,
+    margin: 15,
+  },
+    cardInfo:{
+    backgroundColor:'white',
+    alignSelf:'flex-start',
+    paddingVertical:5,
+    paddingHorizontal:10,
+    borderRadius: 20,
+    flexDirection: 'row', 
+    alignItems: 'center',
+    marginBottom:5,
+    width:'auto',
   },
   image: {
     width: "100%",

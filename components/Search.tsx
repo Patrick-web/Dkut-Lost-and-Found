@@ -28,7 +28,7 @@ const SearchBar = ({ items, filterhandler, clearSearch }: { items: LostItem[], f
           <Image style={{ opacity: 0.4, width: 20, height: 20 }} source={require('../assets/images/close.png')} />
         </Pressable>
       }
-      <TextInput value={searchPattern} onChangeText={(text) => search(text)} onFocus={() => { setHideSearchIcon(true); setLeftPadding(10) }} onBlur={() => { setHideSearchIcon(false); setLeftPadding(40) }} placeholder="Search" style={{ paddingVertical: 5, width: "100%", borderColor: 'grey', borderWidth: 1, paddingLeft: leftPadding, borderRadius: 18 }} />
+      <TextInput value={searchPattern} onChangeText={(text) => search(text)} onFocus={() => { setHideSearchIcon(true); setLeftPadding(10) }} onBlur={() => { setHideSearchIcon(false); setLeftPadding(40) }} placeholder="Search" style={{ paddingVertical: 5, width: "100%", borderColor: 'grey', borderWidth: 1, paddingLeft: leftPadding, borderRadius: 30 }} />
     </View>
   )
 }

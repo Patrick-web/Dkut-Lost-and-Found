@@ -1,4 +1,4 @@
-import { ActivityIndicator, Alert, Image, Modal, Pressable, StyleSheet, ToastAndroid, TouchableOpacity } from 'react-native';
+import { ActivityIndicator, Alert, Image, Modal,  StyleSheet, ToastAndroid, Pressable } from 'react-native';
 import { TextInput, Text, View } from "react-native"
 import { AppUser } from '../types';
 import { useState } from 'react';
@@ -113,19 +113,11 @@ const UpdateUserDetails = ({ currentDetails, updateUserDetails, showModal, setSh
   return (
     <Modal
       animationType="slide"
+      onRequestClose={()=>setShowModal(false)}
       style={{ backgroundColor: "rgba(0,0,0,0.5)", }}
       transparent={true}
       visible={showModal}>
       <View style={styles.container}>
-
-
-        <Pressable
-          onPress={() => { setShowModal(false) }}
-        >
-          <View style={styles.closeModal}>
-            <Image style={{ width: 20, height: 20 }} source={require('../assets/images/close.png')} />
-          </View>
-        </Pressable>
         <View style={styles.form}>
           {isLoading &&
             <View style={styles.loader}>
@@ -154,11 +146,11 @@ const UpdateUserDetails = ({ currentDetails, updateUserDetails, showModal, setSh
             <TextInput textContentType={'newPassword'} keyboardType={'numeric'} placeholder={'6 characters minimum'} onChangeText={handlePin} style={styles.input} />
             {errors.password != '' && <Text style={{ color: 'red', fontSize: 12, marginLeft: 10 }}>{errors.password.trim()}</Text>}
           </View>
-          <TouchableOpacity onPress={createUser} >
+          <Pressable onPress={createUser} >
             <View style={styles.primaryButton} >
               <Text style={{ color: "white", fontWeight: "900" }} >Save Changes</Text>
             </View>
-          </TouchableOpacity>
+          </Pressable>
         </View>
       </View>
     </Modal>
