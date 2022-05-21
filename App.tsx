@@ -14,8 +14,8 @@ import Login from "./routes/Login"
 import Main from "./routes/Main"
 import Onboarder from "./routes/Onboarder"
 
-import { globalState } from './store/store'
 
+import { globalState } from './store/store'
 
 export default function App() {
 

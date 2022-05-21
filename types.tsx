@@ -65,8 +65,15 @@ export interface LostItem {
   isDeleted: boolean;
 };
 
+export interface Notification {
+    id: string;
+    title: string;
+    subtitle?: string;
+    type: 'normal' | 'success' | 'danger' | 'warning'
+}
 
 export interface GlobalState {
   loggedInUser: User | null;
+  notifications: Notification[]
 };
 

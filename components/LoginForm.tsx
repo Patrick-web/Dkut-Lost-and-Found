@@ -6,6 +6,8 @@ import { Alert, StyleSheet, Pressable } from 'react-native';
 import { TextInput, Text, View } from "react-native"
 import { signInUser } from '../db/db';
 import { globalState } from '../store/store'
+
+
 const LoginForm = ({ navigation, setIsLoading }: { navigation: any, setIsLoading: any }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('')

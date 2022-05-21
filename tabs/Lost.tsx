@@ -1,7 +1,9 @@
-import { View, Text, Pressable, StyleSheet, Image, FlatList } from "react-native"
+import { View, Text, Pressable, StyleSheet, Image, FlatList, ScrollResponderEvent } from "react-native"
 import Svg, {Path} from 'react-native-svg';
 
 import SkeletonLoader from "expo-skeleton-loader";
+
+import {Notification} from "../types"
 
 import { tabStyles } from "../styles/global"
 import SearchBar from "../components/Search"
@@ -38,10 +40,7 @@ const LostTab = () => {
     console.log(filteredItems);
     setFilteredResults(filteredItems)
   }
-  function toggleFABvisibility(e: Event){
-      console.log(e)
-    }
-  const listenForChanges = async () => {
+  async function listenForChanges(){
     console.log("Listen for changes")
     const sub = supabase
       .from('Lost')
@@ -53,7 +52,6 @@ const LostTab = () => {
   }
   useEffect(() => {
     fetchLostItems()    
-    console.log(supabase.auth.session())
     listenForChanges()
     return ()=>{
       try{
