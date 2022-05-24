@@ -35,7 +35,8 @@
         "foregroundImage": "./assets/images/appImages/adaptive-icon.png",
         "backgroundColor": "#FFEDCF"
       },
-      "package": "com.pntx.dfound"
+      "package": "com.pntx.dfound",
+      "versionCode":2
     },
     "web": {
       "favicon": "./assets/images/favicon.png"
